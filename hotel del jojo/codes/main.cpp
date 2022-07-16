@@ -1,64 +1,79 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "customer.h"
-
+#define SIZE 999
 struct Room
 {
-    char roomID[10];
+    char roomId[10];
     char roomName[20];
-    int roomPrice[10];
+    int roomPrice;
 };
 
 struct Customer{
-    char ID[255];
-    char name[255];
+    char ID[SIZE];
+    char name[SIZE];
     int age;
-    char causeOfDeath[255];
-    char restingPlace[255];
+    char causeOfDeath[SIZE];
+    char restingPlace[SIZE];
     int deathYear;
-    Room r;
+    char roomId[SIZE];
 };
 
-void newCustomer(){
-    struct Customer cus;
-    scanf("%s", cus.ID); getchar();
-    scanf("%[^\n]", cus.name);getchar();
-    scanf("%d", &cus.age);getchar();
-    scanf("%[^\n]", cus.causeOfDeath);getchar();
-    scanf("%[^\n]", cus.restingPlace);getchar();
-    scanf("%d", &cus.deathYear);getchar();
-    scanf("%s", &cus.r.roomID);getchar();
+int totalCustomer = 0, totalRoom = 0;
+Customer *listC[SIZE];
+Room *listR[SIZE];
 
-    FILE *fp = fopen("../customer/customer_data.txt", "a");
-    fprintf(fp, "%s,%s,%d,%s,%s,%d,%s\n", cus.ID ,cus.name, cus.age,cus.causeOfDeath,cus.restingPlace,cus.deathYear,cus.r.roomID);
-    fclose(fp);
+
+void clrscr() {system("@cls||clear");}
+int getRoom(char roomId[]){
+    int total = 0;
+    total += roomId[3] - '0' + (roomId[2] - '0') * 10 + (roomId[1] - '0') * 100;
+    return total;
 }
 
-void viewCustomer(){
+#include "customer.h"
+#include "room.h"
+
+void loadCustomer(){
     FILE *fp = fopen("../customer/customer_data.txt", "r");
-    struct Customer cus;
-    while(fscanf(fp, "%s,%[^,],%d,%[^,],%[^,],%d,%s\n", cus.ID ,cus.name, &cus.age,cus.causeOfDeath,cus.restingPlace,&cus.deathYear,cus.r.roomID) != EOF){
-    printf("%s,", cus.ID); 
-    printf("%s,", cus.name);
-    printf("%d,", cus.age);
-    printf("%s,", cus.causeOfDeath);
-    printf("%s,", cus.restingPlace);
-    printf("%d,", cus.deathYear);
-    printf("%s\n", cus.r.roomID);
-    printf("\n");
+    char ID[SIZE];
+    char name[SIZE];
+    int age;
+    char causeOfDeath[SIZE];
+    char restingPlace[SIZE];
+    int deathYear;
+    char roomId[SIZE];
+    struct Customer *cus;
+    while(!feof(fp)){
+        fscanf(fp, "%[^,],%[^,],%d,%[^,],%[^,],%d,%s\n", ID ,name, &age,causeOfDeath,restingPlace,&deathYear,roomId);
+        cus = createNewCustomer(ID,name, age,causeOfDeath,restingPlace,deathYear,roomId);
+        listC[totalCustomer] = cus;
+        totalCustomer++;
     }
 }
 
+void loadRoom(){
+    FILE *fp = fopen("../room/room.txt", "r");
+    char roomId[SIZE];
+    char roomName[SIZE];
+    int roomPrice;
 
-void clrscr()
-{
-    system("@cls||clear");
+    struct Room *room;
+    while(!feof(fp)){
+        fscanf(fp, "%[^,],%[^,],%d\n" , roomId, roomName, &roomPrice);
+        room = createNewRoom(roomId,roomName,roomPrice);
+        listR[totalRoom] = room;
+        totalRoom++;
+    }
+
+    fclose(fp);
 }
 
 
 int main(){
-    int choice;
+    loadCustomer();
+    loadRoom();
+    int choice = 0;
     do{
         clrscr();
         puts("Hotel del jojo");
@@ -76,13 +91,14 @@ int main(){
             }
             case 2:{
                 viewCustomer();
-                getchar();
                 break;
             }
             case 3:{
+                updateCustomer();
                 break;
             }
             case 4:{
+                deleteCustomer();
                 break;
             }
         }
