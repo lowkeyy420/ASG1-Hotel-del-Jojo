@@ -51,6 +51,9 @@ void newCustomer(){
     FILE *fp = fopen("../customer/customer_data.txt", "a");
     fprintf(fp, "%s,%s,%d,%s,%s,%d,%s\n", ID ,name, age,causeOfDeath,restingPlace,deathYear,roomId);
     fclose(fp);
+
+    printf("Successfully Added !\nPress enter to continue..."); getchar();
+
 }
 
 void viewCustomer(){
@@ -85,7 +88,7 @@ void viewCustomer(){
         i++;
     }
 
-    printf("Press enter to continue..."); getchar();
+    printf("\nPress enter to continue..."); getchar();
 }
 
 void updateCustomer(){
@@ -137,13 +140,12 @@ void updateCustomer(){
     if (!strcmp(newRoomID,"0")) return;
 
     strcpy(listC[idx]->roomId,newRoomID);
-    printf("%s", listC[idx]->roomId);
     printf("Successfully Updated !\nPress enter to continue...");
     getchar();
+    updateFileCustomer();
 }
 
-void deleteCustomer(){ 
-    // can still be improved~ totalcustomer hasn't been deducted after deletion
+void deleteCustomer(){  //all good now
     clrscr();
     char ID[255];
     bool exists = false;
@@ -163,15 +165,21 @@ void deleteCustomer(){
     if(exists) {
         free(listC[idx]);
         listC[idx] = NULL;
+        for (idx; idx < totalCustomer; idx++)
+        {
+            listC[idx] = listC[idx+1];
+        }
+        totalCustomer--;
+        
         printf("Successfully Deleted !\nPress enter to continue...");
         getchar();
+        updateFileCustomer();
     }
     else {
         printf("No Customer with that ID exists..."); getchar();
         return;
     }
-    
-    
+
 }
 
 #endif 

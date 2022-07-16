@@ -31,6 +31,17 @@ int getRoom(char roomId[]){
     return total;
 }
 
+void updateFileCustomer(){
+    FILE *fp = fopen("../customer/customer_data.txt", "w");
+    int i = 0;
+    while(i < totalCustomer){
+        if(!listC[i]) continue;
+        else fprintf(fp, "%s,%s,%d,%s,%s,%d,%s\n", listC[i]->ID,listC[i]->name,listC[i]->age,listC[i]->causeOfDeath,listC[i]->restingPlace,listC[i]->deathYear,listC[i]->roomId);
+        i++;
+    }
+    fclose(fp);
+}
+
 #include "customer.h"
 #include "room.h"
 
@@ -68,6 +79,7 @@ void loadRoom(){
 
     fclose(fp);
 }
+
 
 
 int main(){

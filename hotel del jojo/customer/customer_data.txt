@@ -1,5 +1,5 @@
-C001,Dodi,18,Kecelakaan Mobil,Toko Kue,2011,R001
-C002,Anto,21,Jatuh Dari Jembatan, Apartemen,2018,R001
+C001,Dodi,18,Kecelakaan Mobil,Toko Kue,2011,R004
+C002,Anto,21,Jatuh Dari Jembatan, Apartemen,2018,R69
 C003,Aseng,32,Jatuh Cinta,Taman,2020,R003
 id,name name,18,causeofdeath,restingplace,2021,roomid
 id2,name2,2,cause of death,resting place,2022,R69
